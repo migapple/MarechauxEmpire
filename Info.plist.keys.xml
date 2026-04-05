@@ -1,0 +1,18 @@
+<!-- Clés à ajouter dans Info.plist (ne PAS remplacer le fichier entier) -->
+
+<!-- 1. Autoriser Wikipedia (HTTP/HTTPS) -->
+<key>NSAppTransportSecurity</key>
+<dict>
+  <key>NSAllowsArbitraryLoads</key>
+  <true/>
+</dict>
+
+<!-- 2. Barre de statut claire (texte blanc sur fond sombre) -->
+<key>UIStatusBarStyle</key>
+<string>UIStatusBarStyleLightContent</string>
+<key>UIViewControllerBasedStatusBarAppearance</key>
+<false/>
+
+<!-- 3. Pas de chiffrement (App Store) -->
+<key>ITSAppUsesNonExemptEncryption</key>
+<false/>

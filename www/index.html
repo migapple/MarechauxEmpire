@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Maréchaux d'Empire</title>
+<style>
+/* ══════════════════════════════════════════
+   DESIGN SYSTEM — EMPIRE NAPOLÉONIEN
+   Bleu impérial · Or · Fond encre
+   ══════════════════════════════════════════ */
+:root {
+  --gold: #C9993A;
+  --gold-light: #E8C76A;
+  --gold-pale: #F5E8C0;
+  --gold-dim: rgba(201,153,58,0.35);
+  --ink: #0B0C16;
+  --ink-mid: #141627;
+  --ink-soft: #1C1E34;
+  --parchment: #EDE8D8;
+
+  /* Catégories */
+  --prom-1804: #1A3A6B;
+  --prom-post: #7A1A2A;
+
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bot: env(safe-area-inset-bottom, 0px);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+html {
+  background: #0B0C16;
+  overscroll-behavior: none;
+}
+
+body {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  background: var(--ink);
+  color: var(--parchment);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ──────── HEADER ──────── */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: linear-gradient(180deg, #07080F 0%, #0B0C16 100%);
+  border-bottom: 1px solid rgba(201,153,58,0.22);
+  padding: calc(var(--safe-top) + 10px) 16px 12px;
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.header-center { flex: 1; text-align: center; }
+
+.header-center h1 {
+  font-family: 'IM Fell English', Georgia, serif;
+  font-size: 22px;
+  letter-spacing: 0.04em;
+  color: var(--gold-light);
+  line-height: 1.15;
+}
+
+.header-center p {
+  font-size: 10.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(201,153,58,0.4);
+  margin-top: 2px;
+  font-style: italic;
+}
+
+.btn-icon {
+  width: 37px; height: 37px;
+  border: 1px solid rgba(201,153,58,0.2);
+  background: rgba(201,153,58,0.08);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: var(--gold);
+  font-size: 15px;
+  flex-shrink: 0;
+}
+.btn-lang { font-size: 20px; }
+
+/* ──────── SEARCH ──────── */
+.search-wrap {
+  position: relative;
+  margin-bottom: 10px;
+}
+.search-wrap input {
+  width: 100%;
+  padding: 8px 12px 8px 34px;
+  background: rgba(255,255,255,0.055);
+  border: 1px solid rgba(201,153,58,0.18);
+  border-radius: 10px;
+  color: var(--parchment);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 15px;
+  font-style: italic;
+  outline: none;
+}
+.search-wrap input::placeholder { color: rgba(237,232,216,0.28); font-style: italic; }
+.search-wrap input:focus { border-color: var(--gold); }
+.search-icon {
+  position: absolute; left: 10px; top: 50%;
+  transform: translateY(-50%);
+  color: rgba(201,153,58,0.38);
+  font-size: 13px;
+  pointer-events: none;
+}
+
+/* ──────── PILLS ──────── */
+.filters {
+  display: flex; gap: 6px;
+  overflow-x: auto; padding-bottom: 2px;
+  scrollbar-width: none;
+}
+.filters::-webkit-scrollbar { display: none; }
+
+.pill {
+  flex-shrink: 0;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  letter-spacing: 0.07em;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all .2s;
+  user-select: none; -webkit-user-select: none;
+  white-space: nowrap;
+}
+.pill.all { background: rgba(201,153,58,0.1); border-color: rgba(201,153,58,0.28); color: var(--gold-light); }
+.pill.all.active { background: var(--gold); color: var(--ink); border-color: var(--gold); font-weight: 600; }
+
+.pill[data-prom="1804"] { background: rgba(26,58,107,0.14); border-color: rgba(26,58,107,0.38); color: #82B8F0; }
+.pill[data-prom="1804"].active { background: var(--prom-1804); color: #fff; border-color: var(--prom-1804); }
+
+.pill[data-prom="post"] { background: rgba(122,26,42,0.14); border-color: rgba(122,26,42,0.38); color: #F5A0A8; }
+.pill[data-prom="post"].active { background: var(--prom-post); color: #fff; border-color: var(--prom-post); }
+
+/* ──────── COUNT BAR ──────── */
+.count-bar {
+  padding: 6px 16px;
+  font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: rgba(201,153,58,0.32);
+  border-bottom: 1px solid rgba(201,153,58,0.06);
+}
+
+/* ──────── LIST ──────── */
+.list-wrap { padding: 8px 12px calc(var(--safe-bot) + 28px); }
+
+.section-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 14px 4px 8px;
+}
+.section-line { flex: 1; height: 1px; background: rgba(201,153,58,0.09); }
+.section-label {
+  font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: rgba(201,153,58,0.32); font-style: italic;
+}
+
+.card {
+  display: flex; align-items: center; gap: 14px;
+  padding: 11px 14px;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(201,153,58,0.08);
+  border-radius: 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: background .15s, border-color .15s;
+}
+.card:active { background: rgba(201,153,58,0.06); border-color: rgba(201,153,58,0.2); }
+
+.portrait-wrap {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: rgba(201,153,58,0.07);
+  border: 1px solid rgba(201,153,58,0.18);
+  overflow: hidden; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+}
+.portrait-wrap img { width:100%; height:100%; object-fit:cover; display:block; }
+
+.card-info { flex: 1; min-width: 0; }
+.card-name {
+  font-family: 'IM Fell English', Georgia, serif;
+  font-size: 15px; color: var(--gold-light);
+  line-height: 1.2; margin-bottom: 2px;
+}
+.card-titre {
+  font-size: 12px; font-style: italic;
+  color: rgba(237,232,216,0.45);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  line-height: 1.3;
+}
+.card-meta { display: flex; align-items: center; gap: 6px; margin-top: 5px; }
+.card-years { font-size: 11px; color: rgba(237,232,216,0.38); letter-spacing: 0.04em; }
+.badge { font-size: 9px; padding: 1px 6px; border-radius: 8px; letter-spacing: 0.06em; }
+.b-1804 { background: rgba(26,58,107,0.38); color: #82B8F0; border: 1px solid rgba(26,58,107,0.55); }
+.b-post { background: rgba(122,26,42,0.38); color: #F5A0A8; border: 1px solid rgba(122,26,42,0.55); }
+.b-hon  { background: rgba(201,153,58,0.1); color: var(--gold); border: 1px solid rgba(201,153,58,0.28); font-size: 8px; }
+
+.card-chevron { color: rgba(201,153,58,0.28); font-size: 14px; flex-shrink: 0; }
+
+/* ──────── MODAL ──────── */
+.modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(7,8,14,0.88);
+  z-index: 200;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+.modal-overlay.open { display: flex; align-items: flex-end; }
+
+.modal-sheet {
+  width: 100%; max-height: 92vh;
+  background: linear-gradient(180deg, #141627 0%, #0B0C16 100%);
+  border-radius: 20px 20px 0 0;
+  border-top: 1px solid rgba(201,153,58,0.18);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  padding-bottom: calc(var(--safe-bot) + 8px);
+}
+.modal-handle {
+  width: 38px; height: 4px;
+  background: rgba(201,153,58,0.22);
+  border-radius: 2px;
+  margin: 10px auto 0;
+  cursor: pointer; flex-shrink: 0;
+}
+.modal-scroll { overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 0 20px 20px; }
+
+/* Modal interior */
+.modal-head {
+  display: flex; align-items: flex-start; gap: 16px;
+  padding: 16px 0 0;
+}
+.modal-portrait {
+  width: 96px; height: 108px;
+  border-radius: 12px;
+  background: rgba(201,153,58,0.07);
+  border: 1px solid rgba(201,153,58,0.18);
+  overflow: hidden; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 40px;
+}
+.modal-portrait img { width:100%; height:100%; object-fit:cover; object-position: top center; display:block; border-radius: 10px; }
+
+.modal-head-info { flex: 1; padding-top: 2px; }
+.modal-name {
+  font-family: 'IM Fell English', Georgia, serif;
+  font-size: 18px; color: var(--gold-light);
+  line-height: 1.25; margin-bottom: 4px;
+}
+.modal-titre {
+  font-size: 12.5px; font-style: italic;
+  color: rgba(237,232,216,0.5);
+  line-height: 1.45; margin-bottom: 8px;
+}
+.modal-badges { display: flex; flex-wrap: wrap; gap: 5px; }
+.modal-badge { font-size: 10px; padding: 2px 8px; border-radius: 10px; letter-spacing: 0.05em; }
+.mb-1804 { background: rgba(26,58,107,0.38); color: #82B8F0; border: 1px solid rgba(26,58,107,0.5); }
+.mb-post { background: rgba(122,26,42,0.38); color: #F5A0A8; border: 1px solid rgba(122,26,42,0.5); }
+.mb-hon  { background: rgba(201,153,58,0.1); color: var(--gold); border: 1px solid rgba(201,153,58,0.28); }
+
+.modal-divider { height: 1px; background: rgba(201,153,58,0.1); margin: 16px 0; }
+
+.modal-section {
+  font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: rgba(201,153,58,0.32); margin-bottom: 8px;
+}
+
+.info-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 10px; margin-bottom: 16px;
+}
+.info-item .info-label {
+  font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: rgba(201,153,58,0.38); margin-bottom: 2px;
+}
+.info-item .info-val { font-size: 13px; color: rgba(237,232,216,0.82); line-height: 1.3; }
+.full-col { grid-column: 1/-1; }
+
+.battles { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 16px; }
+.battle-chip {
+  font-size: 11px; padding: 3px 9px;
+  background: rgba(201,153,58,0.07);
+  border: 1px solid rgba(201,153,58,0.18);
+  border-radius: 8px;
+  color: rgba(237,232,216,0.65); font-style: italic;
+}
+
+.destin-box {
+  background: rgba(201,153,58,0.05);
+  border-left: 2px solid rgba(201,153,58,0.38);
+  border-radius: 0 8px 8px 0;
+  padding: 10px 14px; margin-bottom: 16px;
+}
+.destin-box .info-label { margin-bottom: 4px; }
+.destin-text { font-size: 13px; font-style: italic; color: rgba(237,232,216,0.78); line-height: 1.5; }
+
+.modal-bio { font-size: 14px; line-height: 1.72; color: rgba(237,232,216,0.72); }
+
+/* ──────── SETTINGS ──────── */
+.settings-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(7,8,14,0.82);
+  z-index: 300;
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+}
+.settings-overlay.open { display: flex; align-items: flex-end; }
+
+.settings-sheet {
+  width: 100%; max-height: 85vh;
+  background: linear-gradient(180deg, #141627 0%, #0B0C16 100%);
+  border-radius: 20px 20px 0 0;
+  border-top: 1px solid rgba(201,153,58,0.18);
+  display: flex; flex-direction: column;
+  padding-bottom: calc(var(--safe-bot) + 8px);
+  overflow: hidden;
+}
+.settings-header {
+  padding: 10px 20px 14px;
+  border-bottom: 1px solid rgba(201,153,58,0.09);
+  flex-shrink: 0;
+}
+.settings-handle {
+  width: 38px; height: 4px;
+  background: rgba(201,153,58,0.22); border-radius: 2px;
+  margin: 0 auto 12px; cursor: pointer;
+}
+.settings-title {
+  font-family: 'IM Fell English', Georgia, serif;
+  font-size: 18px; color: var(--gold-light); text-align: center;
+}
+.settings-scroll { overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 16px 20px 4px; }
+
+.settings-section {
+  font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: rgba(201,153,58,0.32); margin-bottom: 10px;
+}
+.app-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid rgba(201,153,58,0.07);
+  cursor: pointer; text-decoration: none;
+}
+.app-item:last-child { border-bottom: none; }
+.app-icon { font-size: 22px; width: 38px; text-align: center; flex-shrink: 0; }
+.app-info { flex: 1; }
+.app-name { font-family: 'IM Fell English', Georgia, serif; font-size: 14px; color: var(--gold-light); }
+.app-desc { font-size: 11px; color: rgba(237,232,216,0.38); font-style: italic; margin-top: 1px; }
+.app-arrow { color: rgba(201,153,58,0.28); font-size: 14px; }
+
+.settings-credit {
+  text-align: center; font-size: 10px;
+  color: rgba(201,153,58,0.22); padding: 16px 0 0;
+  letter-spacing: 0.1em; font-style: italic;
+}
+
+/* ──────── EMPTY ──────── */
+.empty { text-align: center; padding: 60px 20px; color: rgba(237,232,216,0.28); font-style: italic; font-size: 15px; }
+
+::-webkit-scrollbar { width: 0; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-top">
+    <button class="btn-icon btn-lang" id="btnLang" onclick="toggleLang()">🇬🇧</button>
+    <div class="header-center">
+      <h1 id="appTitle">Maréchaux d'Empire</h1>
+      <p id="appSubtitle">Les 26 bâtons de Napoléon</p>
+    </div>
+    <button class="btn-icon" onclick="openSettings()">⚙️</button>
+  </div>
+
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="Rechercher un maréchal…" oninput="renderList()">
+  </div>
+
+  <div class="filters">
+    <div class="pill all active" onclick="setFilter('tous',this)">Tous</div>
+    <div class="pill" data-prom="1804" onclick="setFilter('1804',this)">Promotion 1804</div>
+    <div class="pill" data-prom="post" onclick="setFilter('post',this)">Promotions suivantes</div>
+  </div>
+</header>
+
+<div class="count-bar" id="countBar">26 maréchaux</div>
+<div class="list-wrap" id="listWrap"></div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalBg(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle" onclick="closeModal()"></div>
+    <div class="modal-scroll" id="modalContent"></div>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div class="settings-overlay" id="settingsOverlay" onclick="closeSettingsBg(event)">
+  <div class="settings-sheet">
+    <div class="settings-header">
+      <div class="settings-handle" onclick="closeSettings()"></div>
+      <div class="settings-title" id="settingsTitle">⚙️ À propos</div>
+    </div>
+    <div class="settings-scroll" id="settingsContent"></div>
+  </div>
+</div>
+
+<script>
+// ── CONFIG ──
+const MGA_CONFIG = { appCourante: 'marechaux', lang: 'fr' };
+
+const AUTRES_APPS = [
+  { id:'rois',        icon:'👑', nom:'Rois de France',              nom_en:'Kings of France',             desc:'44 rois · chronologie dynastique',       storeId:'id6761323546' },
+  { id:'presidents',  icon:'🏛', nom:'Présidents de la République', nom_en:'Presidents of the Republic',  desc:'25 présidents · Ve République',          storeId:'id6761424444' },
+  { id:'academie',    icon:'🪶', nom:'Académie française',          nom_en:'Académie française',           desc:'40 Immortels à travers les siècles',     storeId:'id6761334922' },
+  { id:'theatres',    icon:'🎭', nom:'Théâtres Paris',              nom_en:'Paris Theatres',               desc:'39 salles historiques',                  storeId:'id6760929391' },
+  { id:'scenes',      icon:'🎵', nom:'Scènes Paris',                nom_en:'Paris Stages',                 desc:'23 salles de spectacle',                 storeId:'id6761293938' },
+  { id:'musees',      icon:'🖼', nom:'Musées de Paris',             nom_en:'Paris Museums',                desc:'37 musées incontournables',              storeId:'id6760890465' },
+  { id:'cimetieres',  icon:'⚜️', nom:'Cimetières Paris',            nom_en:'Paris Cemeteries',             desc:'Personnages célèbres',                   storeId:'id6760751055' },
+  { id:'restaurants', icon:'🍽', nom:'MesRestaurants',              nom_en:'MesRestaurants',               desc:'Vos adresses favorites',                 storeId:'id6760617965' },
+  { id:'frigo',       icon:'🧊', nom:'Frigo Manager',               nom_en:'Frigo Manager',                desc:'Gestion des dates de péremption',        storeId:'id6759219383' },
+  { id:'cave',        icon:'🍷', nom:'Cave Manager',                nom_en:'Cave Manager',                 desc:'Gérez votre cave à vin',                 storeId:'id6760126279' },
+  { id:'medisafe',    icon:'💊', nom:'MediSafe-Pharmacie',          nom_en:'MediSafe',                     desc:'Gestion des médicaments',                storeId:'id6761271324' },
+];
+
+// ── DATA — 26 MARÉCHAUX D'EMPIRE ──
+const MARECHAUX = [
+  // ── PROMOTION 1804 — ACTIFS ──
+  { id:1, nom:"Louis-Alexandre Berthier", titre:"Prince de Wagram", titre_en:"Prince of Wagram",
+    naissance:1753, mort:1815, promotion:"1804", statut:"actif", origine:"Versailles",
+    batailles:["Lodi","Pyramides","Marengo","Austerlitz","Wagram"],
+    destin:"Chute mystérieuse d'une fenêtre à Bamberg, le 1er juin 1815",
+    destin_en:"Mysterious fall from a window in Bamberg, 1 June 1815",
+    bio:"Chef d'état-major de Napoléon, il fut le bras droit indispensable de l'Empereur pendant toutes les campagnes. Considéré comme le meilleur organisateur militaire de l'Empire, il gérait les ordres, les mouvements de troupes et la logistique avec une précision remarquable. Sa mort à Bamberg — chute accidentelle ou suicide ? — reste l'une des énigmes de l'épopée impériale.",
+    bio_en:"Napoleon's chief of staff and the finest military organiser of the Empire. He managed orders, troop movements and logistics with remarkable precision throughout every campaign. His death at Bamberg — accidental fall or suicide? — remains one of the great mysteries of the Napoleonic era.",
+    wikiTitle:"Louis-Alexandre_Berthier" },
+
+  { id:2, nom:"Joachim Murat", titre:"Roi de Naples", titre_en:"King of Naples",
+    naissance:1767, mort:1815, promotion:"1804", statut:"actif", origine:"La Bastide-Fortunière (Lot)",
+    batailles:["Marengo","Austerlitz","Iéna","Eylau","Borodino"],
+    destin:"Fusillé à Pizzo, Calabre, le 13 octobre 1815",
+    destin_en:"Shot by firing squad in Pizzo, Calabria, 13 October 1815",
+    bio:"Le plus brillant des chefs de cavalerie de l'Empire, beau-frère de Napoléon. Roi de Naples de 1808 à 1815, il tenta de sauver son trône en négociant avec les Alliés, puis se retourna vers Napoléon lors des Cent-Jours. Fait prisonnier après une tentative de reconquête du royaume, il refusa qu'on lui bande les yeux devant le peloton d'exécution.",
+    bio_en:"The Empire's most brilliant cavalry commander and Napoleon's brother-in-law. King of Naples 1808–1815, he tried to save his throne by negotiating with the Allies before rallying to Napoleon. Captured after attempting to retake his kingdom, he reportedly refused a blindfold before the firing squad.",
+    wikiTitle:"Joachim_Murat" },
+
+  { id:3, nom:"Bon-Adrien Jeannot de Moncey", titre:"Duc de Conegliano", titre_en:"Duke of Conegliano",
+    naissance:1754, mort:1842, promotion:"1804", statut:"actif", origine:"Palise (Doubs)",
+    batailles:["Pyrénées (1793–1795)","Valence (Espagne)","Défense de Paris (1814)"],
+    destin:"Mort naturel à Paris, le 20 avril 1842 — dernier survivant de la promotion 1804",
+    destin_en:"Natural death in Paris, 20 April 1842 — last survivor of the 1804 promotion",
+    bio:"Maréchal d'une intégrité exemplaire, il fut le seul à refuser de siéger au tribunal militaire qui condamna Ney à mort. Il dirigea la défense de Paris en 1814 à la tête de la Garde nationale. Doyen des maréchaux, il mourut à 88 ans, dernier survivant des grandes promotions de l'Empire.",
+    bio_en:"A marshal of exemplary integrity, the only one to refuse to serve on the court-martial that condemned Ney. He led the defence of Paris in 1814 at the head of the National Guard. The dean of the marshals, he died at 88 — the last survivor of the Empire's great promotions.",
+    wikiTitle:"Bon-Adrien_Jeannot_de_Moncey" },
+
+  { id:4, nom:"Jean-Baptiste Jourdan", titre:"Comte Jourdan", titre_en:"Count Jourdan",
+    naissance:1762, mort:1833, promotion:"1804", statut:"actif", origine:"Limoges",
+    batailles:["Fleurus (1794)","Wagram","Vitoria (1813)"],
+    destin:"Mort naturel à Paris, le 23 novembre 1833",
+    destin_en:"Natural death in Paris, 23 November 1833",
+    bio:"Vainqueur de Fleurus le 26 juin 1794, l'une des batailles décisives des guerres révolutionnaires. Auteur de la loi Jourdan instituant la conscription obligatoire (1798). Sa campagne d'Espagne se termina par la déroute de Vitoria (1813) face à Wellington, qui mit fin à la présence française dans la péninsule.",
+    bio_en:"Victor of Fleurus on 26 June 1794, one of the decisive battles of the Revolutionary Wars. Author of the Jourdan Law establishing conscription (1798). His Spanish campaign ended in the rout at Vitoria (1813), effectively ending the French presence on the peninsula.",
+    wikiTitle:"Jean-Baptiste_Jourdan" },
+
+  { id:5, nom:"André Masséna", titre:"Prince d'Essling", titre_en:"Prince of Essling",
+    naissance:1758, mort:1817, promotion:"1804", statut:"actif", origine:"Nice",
+    batailles:["Rivoli (1797)","Zurich (1799)","Essling","Wagram","Torrès Védras"],
+    destin:"Mort naturel à Paris, le 4 avril 1817",
+    destin_en:"Natural death in Paris, 4 April 1817",
+    bio:"Surnommé « l'Enfant chéri de la Victoire » par Napoléon lui-même, Masséna est l'un des plus grands tacticiens de l'Empire. Sa défense de Gênes (1800), bien qu'elle se terminât par une capitulation, permit à Napoléon de remporter Marengo. Sa campagne de Portugal (1810–1811) échoua devant les lignes imprenables de Torrès Védras construites par Wellington.",
+    bio_en:"Nicknamed 'the Beloved Child of Victory' by Napoleon himself, Masséna was one of the Empire's greatest tacticians. His defence of Genoa (1800), though ending in surrender, allowed Napoleon to win Marengo. His Portuguese campaign (1810–11) foundered against Wellington's impregnable Lines of Torres Vedras.",
+    wikiTitle:"André_Masséna" },
+
+  { id:6, nom:"Pierre Augereau", titre:"Duc de Castiglione", titre_en:"Duke of Castiglione",
+    naissance:1757, mort:1816, promotion:"1804", statut:"actif", origine:"Paris (faubourg Saint-Marceau)",
+    batailles:["Castiglione (1796)","Iéna","Eylau (1807)"],
+    destin:"Mort naturel à La Houssaye-en-Brie, le 12 juin 1816",
+    destin_en:"Natural death in La Houssaye-en-Brie, 12 June 1816",
+    bio:"Fils d'un domestique parisien, Augereau incarna l'ascension sociale permise par la Révolution. Héros de la bataille de Castiglione (1796), sa conduite hésitante à Eylau (1807) et son attitude équivoque lors des Cent-Jours — après avoir rallié Louis XVIII — lui valurent la froideur finale de Napoléon.",
+    bio_en:"Son of a Parisian servant, Augereau embodied the social mobility made possible by the Revolution. Hero of Castiglione (1796), his hesitant performance at Eylau (1807) and his equivocal behaviour during the Hundred Days — after rallying to Louis XVIII — earned Napoleon's final contempt.",
+    wikiTitle:"Pierre_Augereau" },
+
+  { id:7, nom:"Jean-Baptiste Bernadotte", titre:"Roi de Suède · Charles XIV Jean", titre_en:"King of Sweden · Charles XIV John",
+    naissance:1763, mort:1844, promotion:"1804", statut:"actif", origine:"Pau (Béarn)",
+    batailles:["Fleurus","Iéna","Leipzig (côté allié, 1813)"],
+    destin:"Mort naturel à Stockholm, le 8 mars 1844 — ancêtre des rois de Suède actuels",
+    destin_en:"Natural death in Stockholm, 8 March 1844 — ancestor of Sweden's current royal family",
+    bio:"L'un des destins les plus extraordinaires de l'époque : simple soldat gascon devenu roi de Suède sous le nom de Charles XIV Jean. Élu prince héritier de Suède en 1810 par le Riksdag, il combattit Napoléon à Leipzig (1813). Sa descendance règne encore sur la Suède aujourd'hui.",
+    bio_en:"One of the most extraordinary destinies of the era: a Gascon common soldier who became King of Sweden as Charles XIV John. Elected crown prince of Sweden by the Riksdag in 1810, he fought Napoleon at Leipzig (1813). His descendants still reign over Sweden today.",
+    wikiTitle:"Jean-Baptiste_Bernadotte" },
+
+  { id:8, nom:"Nicolas Soult", titre:"Duc de Dalmatie", titre_en:"Duke of Dalmatia",
+    naissance:1769, mort:1851, promotion:"1804", statut:"actif", origine:"Saint-Amans-la-Bastide (Tarn)",
+    batailles:["Austerlitz (plateau de Pratzen)","Iéna","Albuera","Toulouse (1814)"],
+    destin:"Mort naturel à Saint-Amans-Soult, le 26 novembre 1851",
+    destin_en:"Natural death in Saint-Amans-Soult, 26 November 1851",
+    bio:"Brillant tacticien à Austerlitz où il dirigea l'attaque décisive sur le plateau de Pratzen, déchirant le centre allié. En Espagne, Wellington le surnomma ironiquement « Roi Joseph-Napoléon ». Rallié à la Restauration, il devint président du Conseil sous Louis-Philippe à plusieurs reprises (1832–1847).",
+    bio_en:"Brilliant tactician at Austerlitz, where he led the decisive attack on the Pratzen plateau, shattering the Allied centre. In Spain, Wellington mockingly called him 'King Joseph-Napoleon'. Rallying to the Restoration, he served multiple terms as Prime Minister under Louis-Philippe (1832–1847).",
+    wikiTitle:"Nicolas_Soult" },
+
+  { id:9, nom:"Guillaume Brune", titre:"Comte Brune", titre_en:"Count Brune",
+    naissance:1763, mort:1815, promotion:"1804", statut:"actif", origine:"Brives-la-Gaillarde",
+    batailles:["Campagne de Hollande (1799)","Peschiera","Adige"],
+    destin:"Assassiné à Avignon lors de la Terreur blanche, le 2 août 1815",
+    destin_en:"Murdered in Avignon during the White Terror, 2 August 1815",
+    bio:"Victime de la Terreur blanche après les Cent-Jours, Brune fut lynché par une foule royaliste à Avignon le 2 août 1815. Son corps fut jeté dans le Rhône. Général républicain resté fidèle à Napoléon jusqu'au bout, sa conviction politique lui coûta la vie.",
+    bio_en:"A victim of the White Terror after the Hundred Days, Brune was lynched by a royalist mob in Avignon on 2 August 1815. His body was thrown into the Rhône. A republican general loyal to Napoleon to the end, his political convictions cost him his life.",
+    wikiTitle:"Guillaume_Brune" },
+
+  { id:10, nom:"Jean Lannes", titre:"Duc de Montebello", titre_en:"Duke of Montebello",
+    naissance:1769, mort:1809, promotion:"1804", statut:"actif", origine:"Lectoure (Gers)",
+    batailles:["Montebello","Austerlitz","Friedland","Saragosse","Essling"],
+    destin:"Mortellement blessé à Essling, mort à Vienne le 31 mai 1809",
+    destin_en:"Mortally wounded at Essling, died in Vienna on 31 May 1809",
+    bio:"Le maréchal préféré de Napoléon et son ami intime depuis la campagne d'Italie. Touché par un boulet de canon à Essling, il eut les deux jambes emportées et mourut neuf jours plus tard. Napoléon, qui veilla à son chevet, aurait dit : « J'ai perdu mon meilleur ami, le plus ancien de mes compagnons d'armes. »",
+    bio_en:"Napoleon's favourite marshal and closest friend since the Italian campaign. Struck by a cannonball at Essling and losing both legs, he died nine days later. Napoleon, who sat at his bedside, reportedly said: 'I have lost my best friend, the oldest of my companions in arms.'",
+    wikiTitle:"Jean_Lannes" },
+
+  { id:11, nom:"Édouard Mortier", titre:"Duc de Trévise", titre_en:"Duke of Treviso",
+    naissance:1768, mort:1835, promotion:"1804", statut:"actif", origine:"Le Cateau-Cambrésis",
+    batailles:["Dürrenstein (1805)","Friedland","Moskova","Dresde"],
+    destin:"Tué dans l'attentat de Fieschi sur le boulevard du Temple, Paris, le 28 juillet 1835",
+    destin_en:"Killed in the Fieschi assassination attempt on the Boulevard du Temple, Paris, 28 July 1835",
+    bio:"Maréchal loyal et apprécié de ses hommes, Mortier fut l'un des derniers à quitter Moscou en 1812. Sous la Monarchie de Juillet, il continuait à servir la France. Il mourut dans l'attentat de Fieschi — une « machine infernale » — aux côtés du roi Louis-Philippe qui survécut à l'attentat.",
+    bio_en:"A loyal marshal respected by his men, Mortier was among the last to leave Moscow in 1812. Still serving France under the July Monarchy, he was killed in the Fieschi assassination attempt — a primitive machine gun aimed at King Louis-Philippe, who survived.",
+    wikiTitle:"Édouard_Mortier" },
+
+  { id:12, nom:"Michel Ney", titre:"Prince de la Moskova", titre_en:"Prince of the Moskova",
+    naissance:1769, mort:1815, promotion:"1804", statut:"actif", origine:"Sarrelouis (Sarre)",
+    batailles:["Elchingen (1805)","Iéna","Eylau","Borodino","Waterloo (arrière-garde)"],
+    destin:"Fusillé au Jardin du Luxembourg, Paris, le 7 décembre 1815",
+    destin_en:"Shot by firing squad at the Jardin du Luxembourg, Paris, 7 December 1815",
+    bio:"Surnommé « le Brave des braves » par Napoléon. Il dirigea la retraite de Russie avec un sang-froid légendaire, combattant en dernier pour protéger l'armée. Après avoir rallié Napoléon pour les Cent-Jours, il fut jugé pour trahison envers le roi et fusillé. Il est le seul maréchal de 1804 exécuté par ses compatriotes.",
+    bio_en:"Nicknamed 'the Bravest of the Brave' by Napoleon. He led the retreat from Russia with legendary composure, fighting at the rear guard to protect the army. After rallying to Napoleon for the Hundred Days, he was tried for treason against the king and shot — the only 1804 marshal executed by his own countrymen.",
+    wikiTitle:"Michel_Ney" },
+
+  { id:13, nom:"Louis-Nicolas Davout", titre:"Prince d'Eckmühl", titre_en:"Prince of Eckmühl",
+    naissance:1770, mort:1823, promotion:"1804", statut:"actif", origine:"Annoux (Yonne)",
+    batailles:["Austerlitz","Auerstädt (1806)","Eckmühl (1809)","Wagram","Hambourg (1813–1814)"],
+    destin:"Mort naturel à Paris, le 1er juin 1823",
+    destin_en:"Natural death in Paris, 1 June 1823",
+    bio:"Le seul maréchal jamais vaincu en commandement indépendant. À Auerstädt (1806), il écrasa à lui seul l'armée principale prussienne avec un seul corps d'armée, le même jour que la victoire de Napoléon à Iéna. Surnommé « le Maréchal de fer » pour sa discipline implacable, il défendit Hambourg jusqu'à la capitulation générale de 1814.",
+    bio_en:"The only marshal never defeated in independent command. At Auerstädt (1806), single-handedly destroyed the main Prussian army with one corps, on the same day Napoleon won at Jena. Known as 'the Iron Marshal' for his implacable discipline, he held Hamburg until the general capitulation of 1814.",
+    wikiTitle:"Louis-Nicolas_Davout" },
+
+  { id:14, nom:"Jean-Baptiste Bessières", titre:"Duc d'Istrie", titre_en:"Duke of Istria",
+    naissance:1768, mort:1813, promotion:"1804", statut:"actif", origine:"Prayssac (Lot)",
+    batailles:["Marengo","Austerlitz","Médina de Ríoseco","Borodino"],
+    destin:"Tué par un éclat d'obus à Rippach, veille de Lützen, le 1er mai 1813",
+    destin_en:"Killed by shrapnel at Rippach, eve of Lützen, 1 May 1813",
+    bio:"Commandant de la Garde impériale, Bessières était réputé pour sa loyauté et son sens de l'honneur chevaleresque. Il mourut la veille de la bataille de Lützen, tué par un éclat d'obus en reconnaissant le terrain. Napoléon, apprenant sa mort, dit : « Je n'ai plus d'ami. »",
+    bio_en:"Commander of the Imperial Guard, Bessières was renowned for his loyalty and chivalric honour. He was killed the eve of Lützen by shrapnel while reconnoitring the ground. Upon hearing of his death, Napoleon said: 'I have no more friends.'",
+    wikiTitle:"Jean-Baptiste_Bessières" },
+
+  // ── PROMOTION 1804 — HONORAIRES ──
+  { id:15, nom:"François Christophe de Kellermann", titre:"Duc de Valmy", titre_en:"Duke of Valmy",
+    naissance:1735, mort:1820, promotion:"1804", statut:"honoraire", origine:"Strasbourg",
+    batailles:["Valmy (20 sept. 1792)","Marengo (cavalerie, 1800)"],
+    destin:"Mort naturel à Paris, le 23 septembre 1820",
+    destin_en:"Natural death in Paris, 23 September 1820",
+    bio:"Héros de Valmy le 20 septembre 1792, la canonnade qui stoppa l'invasion prussienne et sauva la Révolution française. Goethe, présent ce jour-là, écrivit : « De ce lieu et de ce jour date une nouvelle époque de l'histoire du monde. » Sa charge de cavalerie à Marengo fut décisive. Maréchal honoraire à 69 ans.",
+    bio_en:"Hero of Valmy on 20 September 1792, the cannonade that halted the Prussian invasion and saved the French Revolution. Goethe, present that day, wrote: 'From this place and from this day forth commences a new era in the world's history.' His cavalry charge at Marengo was decisive. Honorary marshal at 69.",
+    wikiTitle:"François_Christophe_Kellermann" },
+
+  { id:16, nom:"François Joseph Lefebvre", titre:"Duc de Dantzig", titre_en:"Duke of Danzig",
+    naissance:1755, mort:1820, promotion:"1804", statut:"honoraire", origine:"Rouffach (Alsace)",
+    batailles:["Fleurus (1794)","Siège de Dantzig (1807)","Espagne"],
+    destin:"Mort naturel à Paris, le 14 septembre 1820",
+    destin_en:"Natural death in Paris, 14 September 1820",
+    bio:"Fils d'un meunier alsacien, Lefebvre incarna l'ascension méritocratique permise par la Révolution. Sa prise de Dantzig en 1807 lui valut son titre ducal. Sa femme Catherine Hubscher, ancienne blanchisseuse surnommée « Madame Sans-Gêne », inspira la célèbre pièce de Victorien Sardou (1893) et plusieurs films.",
+    bio_en:"Son of an Alsatian miller, Lefebvre embodied the meritocratic advancement made possible by the Revolution. His capture of Danzig in 1807 earned him his ducal title. His wife Catherine Hubscher, a former washerwoman nicknamed 'Madame Sans-Gêne', inspired the celebrated Sardou play (1893) and several films.",
+    wikiTitle:"François_Joseph_Lefebvre" },
+
+  { id:17, nom:"Dominique Catherine de Pérignon", titre:"Marquis de Pérignon", titre_en:"Marquis of Pérignon",
+    naissance:1754, mort:1818, promotion:"1804", statut:"honoraire", origine:"Grenade-sur-Garonne",
+    batailles:["Pyrénées (1793–1795)","Coni (1796)","Barcelone"],
+    destin:"Mort naturel à Paris, le 25 décembre 1818",
+    destin_en:"Natural death in Paris, 25 December 1818",
+    bio:"Général des armées révolutionnaires, Pérignon fut fait prisonnier à la bataille de Novi (1799). Maréchal honoraire, il resta éloigné des grandes campagnes napoléoniennes. Rallié à Louis XVIII lors de la Restauration, il fut fait pair de France et gouverneur militaire de Paris.",
+    bio_en:"A general of the Revolutionary armies, Pérignon was captured at the Battle of Novi (1799). As honorary marshal he remained distant from the great Napoleonic campaigns. Rallying to Louis XVIII, he was made a peer of France and military governor of Paris.",
+    wikiTitle:"Dominique_Catherine_de_Pérignon" },
+
+  { id:18, nom:"Jean Mathieu Philibert Sérurier", titre:"Comte Sérurier", titre_en:"Count Sérurier",
+    naissance:1742, mort:1819, promotion:"1804", statut:"honoraire", origine:"Laon",
+    batailles:["Campagne d'Italie (1796–1797)","Siège de Mantoue"],
+    destin:"Mort naturel à Paris, le 21 décembre 1819",
+    destin_en:"Natural death in Paris, 21 December 1819",
+    bio:"Le plus âgé des maréchaux de 1804 (62 ans à sa nomination), il avait servi sous l'Ancien Régime. Gouverneur des Invalides, il accomplit un geste remarqué : en 1814, à l'approche des Alliés, il fit brûler les drapeaux ennemis conservés aux Invalides pour éviter qu'ils ne soient repris — un acte salué par Napoléon lui-même.",
+    bio_en:"The oldest marshal of 1804 at 62, having served under the Ancien Régime. As governor of the Invalides, he accomplished a celebrated act: in 1814, as the Allies approached, he ordered the enemy flags stored there to be burned rather than let them be recaptured — an act Napoleon himself praised.",
+    wikiTitle:"Jean_Mathieu_Philibert_Sérurier" },
+
+  // ── PROMOTIONS SUIVANTES ──
+  { id:19, nom:"Claude Victor-Perrin", titre:"Duc de Bellune", titre_en:"Duke of Bellune",
+    naissance:1764, mort:1841, promotion:"1807", statut:"actif", origine:"Lamarche (Vosges)",
+    batailles:["Marengo","Friedland (1807)","Talavera (1809)","Beresina (1812)"],
+    destin:"Mort naturel à Paris, le 1er mars 1841",
+    destin_en:"Natural death in Paris, 1 March 1841",
+    bio:"Créé maréchal sur le champ de bataille après Friedland (1807), Victor se distingua en Espagne malgré la défaite de Talavera (1809). Il couvrit héroïquement le passage de la Beresina (1812), sacrifiant son corps d'armée pour protéger la retraite. Rallié à la Restauration, il fut ministre de la Guerre sous Louis XVIII.",
+    bio_en:"Made marshal on the battlefield after Friedland (1807), Victor distinguished himself in Spain despite defeat at Talavera (1809). He heroically covered the Beresina crossing (1812), sacrificing his corps to protect the retreat. Rallying to the Restoration, he served as Louis XVIII's Minister of War.",
+    wikiTitle:"Claude_Victor-Perrin" },
+
+  { id:20, nom:"Nicolas Oudinot", titre:"Duc de Reggio", titre_en:"Duke of Reggio",
+    naissance:1767, mort:1847, promotion:"1809", statut:"actif", origine:"Bar-le-Duc",
+    batailles:["Wagram (1809)","Polotsk (1812)","Grossbeeren (1813)"],
+    destin:"Mort naturel à Paris, le 13 septembre 1847",
+    destin_en:"Natural death in Paris, 13 September 1847",
+    bio:"Célèbre pour sa résistance extraordinaire aux blessures : il en reçut trente-quatre au cours de sa carrière, un record absolu parmi les généraux de l'Empire. Créé maréchal après Wagram (1809). Sa campagne en Allemagne (1813) se solda par la défaite de Grossbeeren face aux Prussiens.",
+    bio_en:"Famous for his extraordinary resistance to wounds — he received thirty-four in total over his career, an absolute record among the Empire's generals. Made marshal after Wagram (1809). His German campaign (1813) ended in defeat at Grossbeeren against the Prussians.",
+    wikiTitle:"Nicolas_Oudinot" },
+
+  { id:21, nom:"Jacques MacDonald", titre:"Duc de Tarente", titre_en:"Duke of Taranto",
+    naissance:1765, mort:1840, promotion:"1809", statut:"actif", origine:"Sancerre (père jacobite écossais)",
+    batailles:["Zurich (1799, défaite)","Wagram (1809)","Leipzig (1813)"],
+    destin:"Mort naturel à Courcelles-le-Roi, le 7 septembre 1840",
+    destin_en:"Natural death in Courcelles-le-Roi, 7 September 1840",
+    bio:"D'origine jacobite écossaise, MacDonald fut longtemps mis à l'écart après la défaite de Zurich (1799). Sa percée héroïque à Wagram — à la tête de 35 000 hommes sous un feu meurtrier — lui valut le bâton de maréchal sur le champ de bataille même, remis par Napoléon en personne. Il rendit à l'Empereur son épée lors de l'abdication de 1814.",
+    bio_en:"Of Scottish Jacobite descent, MacDonald was long sidelined after the defeat of Zurich (1799). His heroic breakthrough at Wagram — leading 35,000 men under murderous fire — earned him his marshal's baton on the battlefield from Napoleon's own hands. He returned the Emperor's sword at the abdication of 1814.",
+    wikiTitle:"Étienne_Macdonald" },
+
+  { id:22, nom:"Auguste de Marmont", titre:"Duc de Raguse", titre_en:"Duke of Ragusa",
+    naissance:1774, mort:1852, promotion:"1809", statut:"actif", origine:"Châtillon-sur-Seine",
+    batailles:["Znaïm (1809)","Salamanque (1812, défaite)","Paris (capitulation, 30 mars 1814)"],
+    destin:"Mort naturel à Venise, le 22 mars 1852 — en exil après la révolution de 1830",
+    destin_en:"Natural death in Venice, 22 March 1852 — in exile after the 1830 revolution",
+    bio:"Ami d'enfance de Napoléon à Brienne, Marmont est passé à la postérité sous le nom de traître. Le 30 mars 1814, il négocia secrètement la capitulation de son corps d'armée avec les Alliés, livrant Paris et précipitant l'abdication de l'Empereur. Le mot populaire « raguser » (trahir) témoigne du jugement de ses contemporains.",
+    bio_en:"Napoleon's childhood friend at Brienne, Marmont is remembered in history as a traitor. On 30 March 1814, he secretly negotiated the surrender of his corps to the Allies, delivering Paris and triggering the Emperor's abdication. The popular verb 'raguser' (to betray) reflects his contemporaries' verdict.",
+    wikiTitle:"Auguste_Frédéric_Louis_Viesse_de_Marmont" },
+
+  { id:23, nom:"Louis-Gabriel Suchet", titre:"Duc d'Albuféra", titre_en:"Duke of Albufera",
+    naissance:1770, mort:1826, promotion:"1811", statut:"actif", origine:"Lyon",
+    batailles:["Lérida (1810)","Tortose (1811)","Sagonte (1811)","Valence (1812)"],
+    destin:"Mort naturel à Marseille, le 3 janvier 1826",
+    destin_en:"Natural death in Marseille, 3 January 1826",
+    bio:"Le seul maréchal à avoir été véritablement victorieux en Espagne. Sa pacification de l'Aragon et de Valence reposait sur une administration juste et humaine qui gagna la confiance de la population. Wellington lui-même déclara qu'il était le meilleur général français de la guerre d'Espagne. Il fut créé maréchal en 1811, distinction accordée uniquement pour ses succès espagnols.",
+    bio_en:"The only marshal truly victorious in Spain. His pacification of Aragon and Valencia was built on just and humane administration that earned the population's trust. Wellington himself declared he was the finest French general of the Peninsular War. Made marshal in 1811 solely on the strength of his Spanish achievements.",
+    wikiTitle:"Louis-Gabriel_Suchet" },
+
+  { id:24, nom:"Laurent de Gouvion Saint-Cyr", titre:"Marquis de Saint-Cyr", titre_en:"Marquis of Saint-Cyr",
+    naissance:1764, mort:1830, promotion:"1812", statut:"actif", origine:"Toul",
+    batailles:["Catalogne (1808–1809)","Polotsk (1812)","Dresde (1813)"],
+    destin:"Mort naturel à Hyères, le 17 mars 1830",
+    destin_en:"Natural death in Hyères, 17 March 1830",
+    bio:"Peintre et artiste avant de devenir général, Saint-Cyr était réputé froid et solitaire — ses soldats le surnommaient « le Hibou ». Sa victoire à Polotsk (1812) lui valut le bâton de maréchal. Sous la Restauration, comme ministre de la Guerre, il réforma profondément l'armée et fonda l'école militaire spéciale de Saint-Cyr qui porte aujourd'hui son nom.",
+    bio_en:"A painter and artist before becoming a general, Saint-Cyr was renowned for being cold and solitary — his soldiers called him 'the Owl'. His victory at Polotsk (1812) earned him his baton. As War Minister under the Restoration, he deeply reformed the army and founded the Saint-Cyr military academy that bears his name today.",
+    wikiTitle:"Laurent_de_Gouvion_Saint-Cyr" },
+
+  { id:25, nom:"Józef Poniatowski", titre:"Prince Poniatowski", titre_en:"Prince Poniatowski",
+    naissance:1763, mort:1813, promotion:"1813", statut:"actif", origine:"Varsovie (Pologne)",
+    batailles:["Galicie (1809)","Smolensk","Borodino","Leipzig (1813)"],
+    destin:"Noyé dans l'Elster lors de la retraite de Leipzig, le 19 octobre 1813",
+    destin_en:"Drowned in the Elster river during the retreat from Leipzig, 19 October 1813",
+    bio:"Neveu du dernier roi de Pologne, Poniatowski incarnait l'espoir d'une Pologne indépendante placée sous la protection de Napoléon. Nommé maréchal sur le champ de bataille de Leipzig le 16 octobre 1813, il mourut trois jours plus tard en se noyant dans l'Elster lors de la retraite. Unique maréchal étranger de l'Empire et héros national polonais.",
+    bio_en:"Nephew of Poland's last king, Poniatowski embodied the hope of an independent Poland under Napoleon's protection. Made marshal on the battlefield of Leipzig on 16 October 1813, he drowned three days later in the Elster during the retreat. The Empire's only foreign marshal and a Polish national hero.",
+    wikiTitle:"Józef_Poniatowski" },
+
+  { id:26, nom:"Emmanuel de Grouchy", titre:"Marquis de Grouchy", titre_en:"Marquis of Grouchy",
+    naissance:1766, mort:1847, promotion:"1815", statut:"actif", origine:"Paris",
+    batailles:["Eylau","Borodino","Ligny (1815)","Wavre (1815)"],
+    destin:"Mort naturel à Saint-Étienne, le 29 mai 1847",
+    destin_en:"Natural death in Saint-Étienne, 29 May 1847",
+    bio:"Dernier maréchal créé par Napoléon, quelques jours avant Waterloo. Son nom est à jamais associé au désastre : envoyé poursuivre les Prussiens après la victoire de Ligny, il ne parvint pas à Waterloo à temps pour apporter les renforts décisifs. Son attitude lors de cette journée du 18 juin 1815 reste l'objet de débats historiques passionnés. Il fut réhabilité sous Louis-Philippe.",
+    bio_en:"The last marshal created by Napoleon, days before Waterloo. His name is forever linked to the disaster: sent to pursue the Prussians after Ligny, he failed to reach Waterloo in time with decisive reinforcements. His actions on 18 June 1815 remain the subject of passionate historical debate. He was rehabilitated under Louis-Philippe.",
+    wikiTitle:"Emmanuel_de_Grouchy" }
+];
+
+// ── STATE ──
+let currentFilter = 'tous';
+let currentLang = 'fr';
+let currentId = null;
+
+// ── FONTS (async pour éviter blocage WKWebView) ──
+(function() {
+  const l = document.createElement('link');
+  l.rel = 'stylesheet';
+  l.href = 'https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap';
+  l.media = 'print';
+  l.onload = () => l.media = 'all';
+  document.head.appendChild(l);
+})();
+
+// ── PORTRAIT CACHE (Wikipedia REST) ──
+const PREFIX = 'marechaux_img_';
+const TTL = 7 * 24 * 3600 * 1000;
+
+async function getPortrait(wikiTitle) {
+  const key = PREFIX + wikiTitle;
+  try {
+    const c = localStorage.getItem(key);
+    if (c) { const {url,ts} = JSON.parse(c); if (Date.now()-ts < TTL) return url; }
+  } catch(e) {}
+  try {
+    const r = await fetch(`https://fr.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(wikiTitle)}`,
+      { headers: { Accept: 'application/json' } });
+    if (!r.ok) return null;
+    const d = await r.json();
+    const url = d.thumbnail?.source || d.originalimage?.source || null;
+    if (url) try { localStorage.setItem(key, JSON.stringify({url, ts:Date.now()})); } catch(e) {}
+    return url;
+  } catch(e) { return null; }
+}
+
+function injectPortrait(wikiTitle, container, modal=false) {
+  if (!wikiTitle || !container) return;
+  getPortrait(wikiTitle).then(url => {
+    if (!url || !container.isConnected) return;
+    const img = new Image();
+    img.onload = () => {
+      const ph = container.querySelector('.portrait-placeholder');
+      if (ph) ph.style.display = 'none';
+      img.style.cssText = `width:100%;height:100%;object-fit:cover;object-position:${modal?'top center':'center'};display:block;${modal?'border-radius:10px':''}`;
+      container.appendChild(img);
+    };
+    img.src = url;
+  });
+}
+
+// ── FILTER ──
+function setFilter(f, el) {
+  currentFilter = f;
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  renderList();
+}
+
+function promoGroup(m) { return m.promotion === '1804' ? '1804' : 'post'; }
+
+function filteredData() {
+  const q = document.getElementById('searchInput').value.trim();
+  const norm = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+  const qn = norm(q);
+  return MARECHAUX.filter(m => {
+    if (currentFilter !== 'tous' && promoGroup(m) !== currentFilter) return false;
+    if (!qn) return true;
+    return norm(m.nom).includes(qn) || norm(m.titre||'').includes(qn) || norm(m.origine||'').includes(qn);
+  });
+}
+
+// ── RENDER ──
+function renderList() {
+  const L = currentLang, data = filteredData(), wrap = document.getElementById('listWrap');
+  const n = data.length;
+  document.getElementById('countBar').textContent = L==='fr'
+    ? `${n} maréchal${n>1?'x':''}`
+    : `${n} marshal${n>1?'s':''}`;
+
+  if (!n) { wrap.innerHTML = `<div class="empty">${L==='fr'?'Aucun résultat':'No results'}</div>`; return; }
+
+  const groups = {};
+  data.forEach(m => { const g = promoGroup(m); (groups[g]||(groups[g]=[])).push(m); });
+
+  const labels = {
+    '1804': {fr:'Promotion de 1804', en:'Promotion of 1804'},
+    'post': {fr:'Promotions 1807–1815', en:'Promotions 1807–1815'}
+  };
+
+  let html = '';
+  ['1804','post'].forEach(g => {
+    if (!groups[g]) return;
+    if (currentFilter==='tous') {
+      html += `<div class="section-header"><div class="section-line"></div><div class="section-label">${labels[g][L]}</div><div class="section-line"></div></div>`;
+    }
+    groups[g].forEach(m => {
+      const isPost = g==='post';
+      const bc = isPost ? 'b-post' : 'b-1804';
+      const hon = m.statut==='honoraire' ? ` <span class="badge b-hon">${L==='fr'?'Hon.':'Hon.'}</span>` : '';
+      const titre = L==='fr' ? (m.titre||'') : (m.titre_en||m.titre||'');
+      html += `
+      <div class="card" onclick="openModal(${m.id})">
+        <div class="portrait-wrap" id="pw-${m.id}"><span class="portrait-placeholder">🦅</span></div>
+        <div class="card-info">
+          <div class="card-name">${m.nom}</div>
+          <div class="card-titre">${titre}</div>
+          <div class="card-meta">
+            <span class="card-years">${m.naissance}–${m.mort}</span>
+            <span class="badge ${bc}">${m.promotion}</span>${hon}
+          </div>
+        </div>
+        <span class="card-chevron">›</span>
+      </div>`;
+    });
+  });
+
+  wrap.innerHTML = html;
+  data.forEach(m => injectPortrait(m.wikiTitle, document.getElementById(`pw-${m.id}`), false));
+}
+
+// ── MODAL ──
+function openModal(id) {
+  const m = MARECHAUX.find(x => x.id===id);
+  if (!m) return;
+  currentId = id;
+  const L = currentLang;
+  const titre = L==='fr'?(m.titre||''):(m.titre_en||m.titre||'');
+  const bio   = L==='fr'?m.bio:(m.bio_en||m.bio);
+  const destin= L==='fr'?m.destin:(m.destin_en||m.destin);
+  const isPost = promoGroup(m)==='post';
+  const bc = isPost?'mb-post':'mb-1804';
+  const badgeTxt = L==='fr'?`Promotion ${m.promotion}`:`Promotion of ${m.promotion}`;
+  const honBadge = m.statut==='honoraire'
+    ? `<span class="modal-badge mb-hon">${L==='fr'?'Honoraire':'Honorary'}</span>` : '';
+
+  const chips = m.batailles.map(b=>`<span class="battle-chip">${b}</span>`).join('');
+
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-head">
+      <div class="modal-portrait" id="mp"><span class="portrait-placeholder">🦅</span></div>
+      <div class="modal-head-info">
+        <div class="modal-name">${m.nom}</div>
+        <div class="modal-titre">${titre}</div>
+        <div class="modal-badges">
+          <span class="modal-badge ${bc}">${badgeTxt}</span>${honBadge}
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-divider"></div>
+
+    <div class="modal-section">${L==='fr'?'Dates & Origine':'Dates & Origin'}</div>
+    <div class="info-grid">
+      <div class="info-item"><div class="info-label">${L==='fr'?'Naissance':'Birth'}</div><div class="info-val">${m.naissance}</div></div>
+      <div class="info-item"><div class="info-label">${L==='fr'?'Mort':'Death'}</div><div class="info-val">${m.mort}</div></div>
+      <div class="info-item full-col"><div class="info-label">${L==='fr'?'Origine':'Origin'}</div><div class="info-val">${m.origine}</div></div>
+    </div>
+
+    <div class="modal-section">${L==='fr'?'Batailles & Campagnes':'Battles & Campaigns'}</div>
+    <div class="battles">${chips}</div>
+
+    <div class="destin-box">
+      <div class="info-label" style="font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(201,153,58,.38);margin-bottom:4px">${L==='fr'?'Destin':'Fate'}</div>
+      <div class="destin-text">${destin}</div>
+    </div>
+
+    <div class="modal-section">${L==='fr'?'Biographie':'Biography'}</div>
+    <div class="modal-bio">${bio}</div>
+    <div style="height:12px"></div>
+  `;
+
+  document.getElementById('modalOverlay').classList.add('open');
+  document.getElementById('modalContent').scrollTop = 0;
+  injectPortrait(m.wikiTitle, document.getElementById('mp'), true);
+}
+
+function closeModalBg(e) { if (e.target===document.getElementById('modalOverlay')) closeModal(); }
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
+
+// ── SETTINGS ──
+function openSettings() {
+  buildSettings();
+  document.getElementById('settingsOverlay').classList.add('open');
+}
+function closeSettings() { document.getElementById('settingsOverlay').classList.remove('open'); }
+function closeSettingsBg(e) { if (e.target===document.getElementById('settingsOverlay')) closeSettings(); }
+
+function buildSettings() {
+  const L = currentLang;
+  document.getElementById('settingsTitle').textContent = L==='fr'?'⚙️ À propos':'⚙️ About';
+  const apps = AUTRES_APPS.filter(a => a.id !== MGA_CONFIG.appCourante);
+  const appsHtml = apps.map(a => {
+    const nom = L==='fr'?a.nom:a.nom_en;
+    return `<a class="app-item" href="https://apps.apple.com/fr/app/${a.storeId}" target="_blank">
+      <span class="app-icon">${a.icon}</span>
+      <span class="app-info"><span class="app-name">${nom}</span><span class="app-desc">${a.desc}</span></span>
+      <span class="app-arrow">›</span>
+    </a>`;
+  }).join('');
+
+  document.getElementById('settingsContent').innerHTML = `
+    <div class="settings-section">${L==='fr'?'Nos autres applications':'Our other apps'}</div>
+    ${appsHtml}
+    <div class="settings-credit">${L==='fr'?'Conçu avec Claude · Anthropic':'Built with Claude · Anthropic'}</div>
+    <div style="height:20px"></div>
+  `;
+}
+
+// ── LANG ──
+function toggleLang() {
+  currentLang = currentLang==='fr'?'en':'fr';
+  const L = currentLang;
+  document.getElementById('btnLang').textContent = L==='fr'?'🇬🇧':'🇫🇷';
+  document.getElementById('appTitle').textContent = L==='fr'?"Maréchaux d'Empire":"Marshals of the Empire";
+  document.getElementById('appSubtitle').textContent = L==='fr'?"Les 26 bâtons de Napoléon":"Napoleon's 26 batons";
+  document.getElementById('searchInput').placeholder = L==='fr'?'Rechercher un maréchal…':'Search for a marshal…';
+  const pills = document.querySelectorAll('.pill');
+  pills[0].textContent = L==='fr'?'Tous':'All';
+  pills[1].textContent = L==='fr'?'Promotion 1804':'Promotion 1804';
+  pills[2].textContent = L==='fr'?'Promotions suivantes':'Later promotions';
+  renderList();
+  if (currentId) openModal(currentId);
+  if (document.getElementById('settingsOverlay').classList.contains('open')) buildSettings();
+}
+
+// ── INIT ──
+// Nettoyer le cache des anciens titres incorrects
+['Édouard_Mortier_(maréchal)','François_Christophe_de_Kellermann','François-Christophe_de_Kellermann','Jacques_MacDonald','Jacques_MacDonald_(maréchal)','Auguste_de_Marmont'].forEach(t => {
+  try { localStorage.removeItem('marechaux_img_' + t); } catch(e) {}
+});
+renderList();
+</script>
+</body>
+</html>

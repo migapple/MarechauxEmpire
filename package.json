@@ -1,0 +1,10 @@
+{
+  "name": "marechaux-empire",
+  "version": "1.0.0",
+  "description": "Les 26 Maréchaux d'Empire",
+  "main": "index.js",
+  "dependencies": {
+    "@capacitor/core": "^6.0.0",
+    "@capacitor/ios": "^6.0.0"
+  }
+}

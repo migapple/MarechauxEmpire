@@ -1,0 +1,10 @@
+{
+  "appId": "com.michel.garlandat.marechauxempire",
+  "appName": "Maréchaux d'Empire",
+  "webDir": "www",
+  "backgroundColor": "#070510",
+  "bundledWebRuntime": false,
+  "ios": {
+    "contentInset": "always"
+  }
+}
